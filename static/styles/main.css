@@ -1,0 +1,124 @@
+/* Bootstrap Over-ride */
+@media (min-width: 1000px) {
+    .container {
+        max-width: 1400px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .container {
+        max-width: 100%;
+        padding: 0 24px;
+    }
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown-menu {
+    top: 58px;
+    left: 0px;
+    padding: 10px;
+}
+
+.alert {
+    margin-right: 1rem;
+    z-index: 40;
+}
+
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+html, body, p, div, h1, h2, h3, h4, h5 {
+    letter-spacing: -0.02px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.fs12 {
+    font-size: 12px;
+}
+
+.fs15 {
+    font-size: 0.9375rem;
+}
+
+.fw300 {
+    font-weight: 300;
+}
+
+.fw500 {
+    font-weight: 500;
+}
+
+.is-uppercase {
+    text-transform: uppercase;
+}
+
+
+/* Navbar */
+
+.basket-btn {
+    position: relative;
+    margin-left: 20px;
+}
+
+.basket-btn:hover, .basket-btn:focus, .basket-btn:active, .basket-btn.active {
+    color: #d42114;
+    transition-duration: 0.4s;
+    background-color: #fff;
+}
+
+
+/* Position */
+input {
+    width: 100%;
+}
+
+table.table {
+    vertical-align: middle;
+}
+
+.is-round {
+    border-top-left-radius: 40px !important;
+    border-top-right-radius: 40px !important;
+    border-bottom-left-radius: 40px !important;
+    border-bottom-right-radius: 40px !important;
+    margin-right: 0px !important;
+    margin-left: 20px !important;
+}
+
+.btn {
+    border-radius: 0px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+/* Footer */
+
+.footer > div > div > ul > li {
+    padding-bottom: 8px;
+}
+
+
+/* color */
+.product-list-item .card .price {
+    color: #888;
+}
+
+.navbar-dark .navbar-nav .nav-link, .btn-outline-secondary {
+    color: #aaaaaa;
+}
+
+.is-lightblue {
+    background-color: hsl(142, 52%, 96%);
+}
+
+p.is-danger {
+    color: #d42114;
+}
+
+
+.alert-primary {
+    background-color: #E4F1FF;
+}

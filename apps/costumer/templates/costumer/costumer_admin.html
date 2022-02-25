@@ -1,0 +1,108 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Costumer admin | {% endblock %}
+
+{% block content %}
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h1 class="title fw-light">Costumer admin - {{ costumer.name }}</h1>
+
+        <hr>
+
+        <a href="{% url 'edit_costumer' %}" class="btn btn-primary is-uppercase" role="button">Edit</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger is-uppercase" role="button">Log out</a>
+    </div>
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h2 class="mb-4">Saved products</h2>
+        {% if products %}
+            <div class="album py-5 bg-light">
+                <div class="container">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+                        {% for product in products %}
+                            {% include 'product/parts/list_item.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>You haven't saved any product yet...</p>
+        {% endif %}
+    </div>
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h2 class="mb-4">My orders</h2>
+        {% if orders %}
+            {% for order in orders %}
+                <div class="is-lightblue mb-2 p-4">
+                    <div class="col">
+                        <h3>#{{ order.id }} - {{ order.created_at }}</h3>
+                    </div>
+                    <div class="col">
+                        <b>Address:</b> {{ order.address_line_1 }} {{ order.address_line_2 }}<br>
+                        <b>Country, town, postcode: </b>
+                        {{ order.country }}, {{ order.town_city }}, {{ order.postcode }}<br>
+                        <b>E-mail:</b> {{ order.email }}<br>
+                        <b>Phone:</b> {{ order.phone_number }}
+                        <div class="table-responsive">
+                            <table class="table table-light table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Bought from</th>
+                                    <th>Paid</th>
+                                    <th>Shipped</th>
+                                    <th>Received</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in order.items.all %}
+                                    {% if item.costumer == request.user.costumer %}
+                                        <tr>
+                                            <td>{{ item.product.title }}</td>
+                                            <td>${{ item.product.price }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td>${{ item.get_total_price }}</td>
+                                            <td><a href="{% url "vendor" item.vendor.id %}">{{ item.vendor }}</a>
+                                            </td>
+                                            <td>{{ order.costumer_has_paid|yesno:"Yes,No" }}</td>
+                                            <td>{{ item.is_shipped|yesno:"Yes,No" }}</td>
+                                            <td>{{ item.is_received|yesno:"Yes,No" }}</td>
+                                            <td>
+                                                {% if item.is_received and not item.is_reviewed %}
+                                                    <form action="{% url "leave_review" item.id %}"
+                                                          method=POST> {% csrf_token %}
+                                                        <button type="submit" name="leave-review-button"
+                                                                value="{{ item.vendor.id }}"
+                                                                class="btn btn-primary btn-sm">
+                                                            Leave a review
+                                                        </button>
+                                                    </form>
+                                                {% elif item.is_shipped and not item.is_received %}
+                                                    <form action="{% url "confirm_delivery" item.id %}"
+                                                          method=POST> {% csrf_token %}
+                                                        <button type="submit" name="confirm-delivery-button"
+                                                                value="{{ item.id }}" class="btn btn-primary btn-sm">
+                                                            Confirm the successful delivery
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You haven't placed any order yet...</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+
+

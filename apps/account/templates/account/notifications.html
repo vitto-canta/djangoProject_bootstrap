@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ NOTIFICATIONS }} | {% endblock %}
+
+{% block content %}
+
+    {% if request.user.notifications.all %}
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a href="{% url 'mark_notifications_read' %}?next={% url 'notifications' %}"
+               class="btn btn-primary is-uppercase" role="button">Mark all notifications as read</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-light table-striped">
+                <thead>
+                <tr>
+                    <th>from</th>
+                    <th>object</th>
+                    <th>Message</th>
+                    <th>When</th>
+                    <th>Read</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for notification in  request.user.notifications.all %}
+                    <tr>
+                        <td>{{ notification.actor }}</td>
+                        <td>{{ notification.action_object }}</td>
+                        <td>{{ notification.description }}</td>
+                        <td>{{ notification.timestamp }}</td>
+                        <td>
+                            {% if notification.unread %}
+                                <span class="icon-text text-danger">
+                                    <span class="icon">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span>Unread</span>
+                                </span>
+                            {% else %}
+                                <span class="icon-text text-success">
+                                    <span class="icon">
+                                        <i class="fas fa-check-double"></i>
+                                    </span>
+                                    <span>Read</span>
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>You don't have any notifications yet...</p>
+    {% endif %}
+{% endblock %}

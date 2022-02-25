@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ vendor.name }} | {% endblock %}
+
+{% block content %}
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h1 class="title fw-light">{{ vendor.name }}</h1>
+    </div>
+    <hr>
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h2 class="mb-4">Item for sale</h2>
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+                    {% for product in vendor.products.all %}
+                        {% if not product.is_sold %}
+                            {% include 'product/parts/list_item.html' %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h2 class="mb-4">Reviews</h2>
+        {% if reviews %}
+            <strong>Average rate: </strong>{{ vendor.get_average_rate }}/5.0
+
+            <hr>
+
+            <div class="table-responsive">
+                <table class="table table-light table-striped">
+                    <thead>
+                    <tr>
+                        <th>Rate</th>
+                        <th>Comment</th>
+                        <th>Written by</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.rate }}</td>
+                            {% if request.user.is_authenticated %}
+                                <td>{{ review.comment }}</td>
+                                <td>{{ review.made_by.name }}</td>
+                                <td>{{ review.created_at }}</td>
+                            {% else %}
+                                <td>Login to see more</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>He doesn't have any reviews yet...</p>
+        {% endif %}
+    </div>
+{% endblock %}

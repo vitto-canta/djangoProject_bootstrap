@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Edit vendor | {% endblock %}
+
+{% block content %}
+    <h1 class="title fw-light">Edit your vendor name</h1>
+    <form method="post" action=".">
+        {% csrf_token %}
+        <div class="field">
+            <label>Vendor name</label>
+            <div class="control">
+                <input type="text" name="name" id="id_name" value="{{ vendor.name }}" class="input">
+            </div>
+            <p class="help">It is not the same as you username! Edit it only if you want it to be different from your
+                username</p>
+        </div>
+        <div class="field">
+            <div class="control">
+                <button class="btn btn-dark is-uppercase">Save changes</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

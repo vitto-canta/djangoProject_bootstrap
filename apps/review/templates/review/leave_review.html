@@ -1,0 +1,9 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Leave a review | {% endblock %}
+
+{% block content %}
+    <h1 class="title fw-light">Leave a review to ... {{ vendor }}</h1>
+    {% load crispy_forms_tags %}
+    {% crispy form %}
+{% endblock %}

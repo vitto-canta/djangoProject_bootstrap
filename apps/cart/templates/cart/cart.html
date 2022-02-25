@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_filters %}
+
+{% block title %}Cart | {% endblock %}
+
+{% block content %}
+    <h1 class="title fw-light">Cart</h1>
+    {% if cart %}
+        <div class="container shadow p-3 mb-6 bg-body rounded">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <th></th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th></th>
+                    </thead>
+                    <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td>
+                                <figure>
+                                    <img src="{{ item.product.get_thumbnail }}" style="height:40px; width:auto;">
+                                </figure>
+                            </td>
+                            <td>
+                                <a href="{% url 'product' item.product.category.slug item.product.slug item.product.id %}">{{ item.product.title }}</a>
+                            </td>
+                            <td>
+                                {{ item.quantity }}
+                                <a href="?change_quantity={{ item.id }}&quantity=-1"
+                                   class="btn btn-sm btn-outline-primary" role="button"
+                                   style="border-radius: 50%; width: 30px">-</a>
+                                <a href="?change_quantity={{ item.id }}&quantity=1"
+                                   class="btn btn-sm btn-outline-primary" role="button"
+                                   style="border-radius: 50%; width: 30px">+</a>
+                            </td>
+                            <td>${{ item.total_price }}</td>
+                            <td><a href="?remove_from_cart={{ item.id }}" class="btn-sm btn btn-outline-danger"
+                                   role="button"> X remove</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td></td>
+                        <td><strong>Total cost</strong></td>
+                        <td><strong>{{ cart|length }}</strong></td>
+                        <td colspan="2"><strong>${{ cart.get_total_cost }}</strong></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <br>
+        <h2 class="subtitle">Contact and payment information</h2>
+        {% load crispy_forms_tags %}
+        {% crispy form %}
+        {% if form.non_field_errors %}
+            <span class="badge bg-warning text-dark">{{ form.non_field_errors }}</span>
+        {% endif %}
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <span class="badge bg-warning text-dark"><strong>{{ field.label }}: </strong>{{ error }}</span>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <p>You don't have any products in your cart!</p>
+    {% endif %}
+{% endblock %}

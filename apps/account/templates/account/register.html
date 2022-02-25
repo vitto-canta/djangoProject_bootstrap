@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Create an account | {% endblock %}
+
+{% block content %}
+    <h1 class="title fw-light">Create an account</h1>
+    {% load crispy_forms_tags %}
+    {% crispy form %}
+
+    <hr>
+
+    <h5 class="subtitle">Already have an account?</h5>
+    <a href="{% url 'login' %}">Log in</a>
+    <h5 class="subtitle">Already have a vendor account and want to become a costumer?</h5>
+    <a href="{% url 'upgrade_costumer' %}">Click here</a>
+    <h5 class="subtitle">Already have a costumer account and want to become a vendor?</h5>
+    <a href="{% url 'upgrade_vendor' %}">Click here</a>
+{% endblock %}

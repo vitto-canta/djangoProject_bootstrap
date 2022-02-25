@@ -1,0 +1,10 @@
+{% extends 'core/base.html' %}
+
+{% block title %}My personal data | {% endblock %}
+
+{% block content %}
+    {% load crispy_forms_tags %}
+    {% crispy form %}
+    <a class="btn btn-danger is-uppercase" href="{% url "change_password" %}">Change password</a>
+    <a class="btn btn-secondary is-uppercase" href="{% url 'frontpage' %}">Back to homepage</a>
+{% endblock %}

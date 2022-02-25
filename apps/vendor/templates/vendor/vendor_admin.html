@@ -1,0 +1,162 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Vendor admin | {% endblock %}
+
+{% block content %}
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h1 class="title fw-light">Vendor admin - {{ vendor.name }}</h1>
+
+        <hr>
+
+        <strong>My total gain: </strong>${{ vendor.total_gain }}<br>
+        <strong>I've already recovered: </strong>${{ vendor.get_paid_amount }}<br>
+        <strong>My credit: </strong>${{ vendor.get_not_paid_amount }}
+        <br><br>
+
+        <form action="{% url "recover_credit" %}" method=POST> {% csrf_token %}
+            <button type="submit" class="btn btn-dark is-uppercase">Recover my credit</button>
+        </form>
+
+        <hr>
+
+        <a href="{% url 'edit_vendor' %}" class="btn btn-primary is-uppercase" role="button">Edit</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger is-uppercase" role="button">Log out</a>
+    </div>
+
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h2 class="mb-4">My products</h2>
+
+        <a href="{% url 'add_product' %}" role="button" class="btn btn-dark is-uppercase">Add product</a>
+
+        {% if products %}
+            <div class="table-responsive mt-4">
+                <table class="table table-light table-striped">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'product' product.category.slug product.slug product.id %}">{{ product.title }}</a>
+                            </td>
+                            <td>${{ product.price }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>You don't have any products yet...</p>
+        {% endif %}
+    </div>
+
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h2 class="mb-4">My orders</h2>
+        {% if orders %}
+            {% for order in orders %}
+                <div class="is-lightblue mb-2 p-4">
+                    <div class="col">
+                        <h3>#{{ order.id }} - {{ order.created_at }}</h3>
+                    </div>
+                    <div class="col">
+                        <b>Name:</b> {{ order.name }} {{ order.surname }}<br>
+                        <b>Address:</b> {{ order.address_line_1 }}{{ order.address_line_2 }}<br>
+                        <b>Country, town,
+                            postcode: </b> {{ order.country }}, {{ order.town_city }}, {{ order.postcode }}<br>
+                        <b>E-mail:</b> {{ order.email }}<br>
+                        <b>Phone:</b> {{ order.phone_number }}
+                        <div class="table-responsive">
+                            <table class="table table-light table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Paid</th>
+                                    <th>Shipped</th>
+                                    <th>Received</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in order.items.all %}
+                                    {% if item.vendor == request.user.vendor %}
+                                        <tr>
+                                            <td>{{ item.product.title }}</td>
+                                            <td>${{ item.product.price }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td>${{ item.get_total_price }}</td>
+                                            <td>{{ item.vendor_paid|yesno:"Yes,No" }}</td>
+                                            <td>{{ item.is_shipped|yesno:"Yes,No" }}</td>
+                                            <td>{{ item.is_received|yesno:"Yes,No" }}</td>
+                                            <td>${{ item.get_total_price }}</td>
+                                            <td>
+                                                {% if item.is_received %}
+                                                    Delivered successfully
+                                                {% elif item.is_shipped %}
+                                                    It'll be delivered in a few days...
+                                                {% else %}
+                                                    <form action="{% url "confirm_shipment" item.id %}"
+                                                          method=POST> {% csrf_token %}
+                                                        <button type="submit" name="confirm-shipment-button"
+                                                                value="{{ item.id }}" class="btn btn-primary btn-sm">
+                                                            Confirm the shipment
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You haven't received any order yet...</p>
+        {% endif %}
+    </div>
+    <div class="container shadow p-3 mb-5 bg-body rounded">
+        <h2 class="mb-4">My reviews</h2>
+        {% if reviews %}
+            <div class="is-lightblue mb-2 p-4">
+            <strong>Average rate: </strong>{{ vendor.get_average_rate }}/5.0
+
+            <hr>
+
+            <div class="table-responsive">
+                <table class="table table-light table-striped">
+                    <thead>
+                    <tr>
+                        <th>Rate</th>
+                        <th>Comment</th>
+                        <th>Written by</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.rate }}</td>
+                            <td>{{ review.comment }}</td>
+                            <td>{{ review.made_by.name }}</td>
+                            <td>{{ review.created_at }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>You don't have any reviews yet...</p>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

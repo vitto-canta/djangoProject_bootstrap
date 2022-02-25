@@ -1,0 +1,19 @@
+<div class="col product-list-item ">
+    <div class="card shadow p-3 mb-5 bg-body rounded">
+        <div class="text-center">
+            <figure class="figure">
+                <img src="{{ product.get_thumbnail }}" class="img-fluid">
+            </figure>
+        </div>
+        <div class="card-body">
+            <h3 class="subtitle">{{ product.title }}</h3>
+
+            <h5 class="price mb-5">${{ product.price }}</h5>
+
+            <hr>
+
+            <a href="{% url 'product' product.category.slug product.slug product.id %}"
+               class="btn btn-dark is-uppercase" role="button">View</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ product.title }} | {% endblock %}
+
+{% block content %}
+    {% if product.image %}
+        <figure class="image mb-6">
+            <img src="{{ product.image.url }}" style="width:50%; height:auto;">
+        </figure>
+    {% endif %}
+
+    <h1 class="title fw-light">{{ product.title }}, ${{ product.price }}</h1>
+    <a href="{% url 'vendor' product.vendor.id %}"><span class="badge bg-dark">{{ product.vendor.name }}</span></a>
+
+    <hr>
+
+    <p>{{ product.description }}</p>
+
+    <hr>
+
+    {% if request.user.is_authenticated and request.user.is_costumer %}
+        <form method="post" action=".">
+            {% csrf_token %}
+            <div class="field has-addons">
+                <div class="control w-25">
+                    <input type="number" name="quantity" value="1" class="input" min="1" max="{{ product.quantity }}">
+                </div>
+                <div class="control">
+                    <button class="btn btn-dark is-uppercase">Add to cart</button>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <div class="control">
+            <a href="{% url 'login' %}" class="btn btn-danger is-uppercase" role="button">Login to buy this product</a>
+        </div>
+    {% endif %}
+
+
+
+
+
+    <form action="{% url 'save-unsaved-product' %}" method="POST" product='{{ product.id }}'>
+        {% csrf_token %}
+        <input type="hidden" name="product" value={{ product.id }}>
+        <button type="submit" class="btn btn-success">
+            {% if request.user.costumer not in product.saved_by.all %}
+                <span class="icon">
+      <i class="far fa-heart"></i>
+    </span>
+                <span>Add to favorites</span>
+            {% else %}
+                <span class="icon">
+      <i class="fas fa-heart"></i>
+    </span>
+                <span>Delete from favorites</span>
+            {% endif %}
+        </button>
+
+    </form>
+    {% if product.total_saved > 0 %}
+        <div class="col">
+            Saved by {{ product.total_saved }} users
+        </div>
+    {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% if similar_products %}
+        <hr>
+
+
+        <div class="container shadow p-3 mb-5 bg-body rounded">
+            <h2 class="subtitle">Similar products</h2>
+            <div class="album py-5 bg-light">
+                <div class="container overflow-auto">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3" style="max-height:500px; ">
+
+
+                        {% for product in similar_products %}
+                            {% include 'product/parts/list_item.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if related_products %}
+        <hr>
+
+        <div class="container shadow p-3 mb-5 bg-body rounded">
+            <h2 class="subtitle">You may also like</h2>
+            <div class="album py-5 bg-light">
+                <div class="container overflow-auto">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3" style="max-height:500px; ">
+
+                        {% for product in related_products %}
+                            {% include 'product/parts/list_item.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
