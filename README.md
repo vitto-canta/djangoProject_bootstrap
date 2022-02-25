@@ -2,13 +2,15 @@
 
 Piattaforma di acquisti online di articoli da collezionismo, di antiquariato o riuso. Il sito consente di mettere in
 contatto i venditori con i possibili acquirenti. Per installarlo è sufficiente unzippare la directory (o clonare la repo
-github https://github.com/vitto-canta/djangoProject_bootstrap), aprirla con Pycharm (o altro) e installare i requirements. I
-requirements sono riportati nel file requirements.txt e installabili:
+github https://github.com/vitto-canta/djangoProject_bootstrap) e aprirla con Pycharm (o eventualmente altro).
+Per configurare il virtualenv è possibile sfruttare quello già fornito (directory \venv) adatto a sistemi operativi Unix,
+in alternativa crearne uno nuovo e procedere all'installazione dei requirements, riportati nel file requirements.txt
 
-- singolarmente con il comando pip/pip3 install <nome_plugin>
-- pip install -r requirements.txt
+per fare ciò, attivare il virtualenv e optare per una delle due opzioni:
+- installare i requirements singolarmente con il comando pip install <nome_plugin>
+- installarli tutti insieme con il comando pip install -r requirements.txt
 
-Infine avviarlo con il comando python manage.py runserver
+Infine avviare il server con il comando python manage.py runserver
 
 Lascio a disposizione utente admin:
 
